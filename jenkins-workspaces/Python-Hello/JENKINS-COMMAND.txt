@@ -1,0 +1,4 @@
+Build step -> Execute Windows batch command:
+python hello.py
+
+If python is not recognized, use where.exe python in PowerShell and replace python with the full path to python.exe. Jenkins service may have a different PATH.

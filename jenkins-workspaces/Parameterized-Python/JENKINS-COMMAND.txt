@@ -1,0 +1,11 @@
+Enable This project is parameterized -> String Parameter:
+Name: NAME
+Default Value: World
+
+Build step -> Execute Windows batch command:
+python hello.py %NAME%
+
+If Python is not on Jenkins PATH, use the full python.exe path:
+"C:\Path\To\python.exe" hello.py %NAME%
+
+Use Build with Parameters and enter NAME=Kovid.

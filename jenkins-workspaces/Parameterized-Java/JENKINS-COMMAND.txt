@@ -1,0 +1,9 @@
+Enable This project is parameterized -> String Parameter:
+Name: NAME
+Default Value: World
+
+Build step -> Execute Windows batch command:
+javac ParameterizedHello.java
+java ParameterizedHello %NAME%
+
+Use Build with Parameters and enter NAME=Kovid.

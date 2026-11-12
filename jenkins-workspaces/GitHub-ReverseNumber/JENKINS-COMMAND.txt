@@ -1,0 +1,9 @@
+For Set 7A configure Source Code Management -> Git:
+Repository URL: https://github.com/kovid-reddy/Jenkins-Repo.git
+
+Source path:
+jenkins-workspaces/GitHub-ReverseNumber/ReverseNumber.java
+
+Windows batch build step after the repository is cloned:
+javac jenkins-workspaces\GitHub-ReverseNumber\ReverseNumber.java
+java -cp jenkins-workspaces\GitHub-ReverseNumber ReverseNumber

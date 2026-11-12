@@ -1,0 +1,3 @@
+Freestyle project -> Build Steps -> Execute Windows batch command:
+javac HelloWorld.java
+java HelloWorld

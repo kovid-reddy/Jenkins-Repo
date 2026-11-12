@@ -1,0 +1,10 @@
+For Set 8A configure Source Code Management -> Git:
+Repository URL: https://github.com/kovid-reddy/Jenkins-Repo.git
+
+Source path:
+jenkins-workspaces/GitHub-Node-CreateFile/createfile.js
+
+Windows batch build step:
+node jenkins-workspaces\GitHub-Node-CreateFile\createfile.js
+
+newfile.txt is created in the job workspace.

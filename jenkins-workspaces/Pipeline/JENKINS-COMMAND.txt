@@ -1,0 +1,3 @@
+Create New Item -> Pipeline.
+Choose Pipeline script and paste Pipeline.groovy.
+Click Save -> Build Now.
