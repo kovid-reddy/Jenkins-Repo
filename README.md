@@ -1,156 +1,469 @@
-# DevOps Lab Internal-2 — practical pack
+# DevOps Lab Internal-2 — complete practical runbook
 
-Clone the repository on the lab PC:
+## 1. Clone the repository on the lab PC
+
+Run these commands in **PowerShell**:
 
 ```powershell
 git clone https://github.com/kovid-reddy/Jenkins-Repo.git
 cd Jenkins-Repo
 ```
 
-All paths below are relative to the cloned `Jenkins-Repo` folder. Open the folder that contains the listed `Dockerfile` or `compose.yaml` before running Docker commands.
+All paths and commands below assume your terminal is in the cloned `Jenkins-Repo` root folder unless the command block first changes directory.
 
-## Exact question-to-file map
-
-### SET 1
-- **1A — Simple Hello World Java through Jenkins**
-  - Java source: `jenkins-workspaces/Hello-Java/HelloWorld.java`
-  - Jenkins instructions: `jenkins-workspaces/Hello-Java/JENKINS-COMMAND.txt`
-- **1B — Selenium: open Wikipedia and take screenshot**
-  - Python source: `SET1/selenium/wiki_screenshot.py`
-  - Run from that folder: `py wiki_screenshot.py`
-  - Screenshot output: `wikipedia.png` in the current working folder.
-
-### SET 2
-- **2A — Selenium: open Google and search content**
-  - Python source: `SET2/selenium/google_search.py`
-  - Run from that folder: `py google_search.py`
-- **2B — Parameterized Java through Jenkins**
-  - Java source: `jenkins-workspaces/Parameterized-Java/ParameterizedHello.java`
-  - Jenkins instructions: `jenkins-workspaces/Parameterized-Java/JENKINS-COMMAND.txt`
-  - Jenkins String Parameter name: `NAME`; Windows batch argument: `%NAME%`.
-
-### SET 3
-- **3A — Create and run Python program using Docker**
-  - Files: `SET3/python-docker/hello.py` and `SET3/python-docker/Dockerfile`
-  - Commands (run from `SET3/python-docker`):
-    ```powershell
-    docker build -t python-hello .
-    docker run --rm python-hello
-    ```
-- **3B — Selenium: open Google**
-  - Python source: `SET3/selenium/google.py`
-  - Run from that folder: `py google.py`
-
-### SET 4
-- **4A — Nginx with user-defined HTML using Docker Compose**
-  - HTML: `SET4/nginx-compose/index.html`
-  - Compose file: `SET4/nginx-compose/compose.yaml`
-  - Commands (run from `SET4/nginx-compose`): `docker compose up -d`; open http://localhost:8080; stop with `docker compose down`.
-- **4B — Python Hello World through Jenkins**
-  - Python source: `jenkins-workspaces/Python-Hello/hello.py`
-  - Jenkins instructions: `jenkins-workspaces/Python-Hello/JENKINS-COMMAND.txt`
-
-### SET 5
-- **5A — Jenkins Pipeline with at least two stages**
-  - Pipeline script: `jenkins-workspaces/Pipeline/Pipeline.groovy`
-  - Alternate copy: `SET5/jenkins-pipeline/Pipeline.groovy`
-  - Jenkins instructions: `jenkins-workspaces/Pipeline/JENKINS-COMMAND.txt`
-- **5B — Selenium: open Wikipedia and take screenshot**
-  - Python source: `SET5/selenium/wiki_screenshot.py`
-
-### SET 6
-- **6A — Java JDK 17, Python and Node.js programs using Docker Compose**
-  - Compose file: `SET6/multi-compose/compose.yaml`
-  - Java source and Dockerfile: `SET6/multi-compose/java/Hello.java`, `SET6/multi-compose/java/Dockerfile`
-  - Python source and Dockerfile: `SET6/multi-compose/python/hello.py`, `SET6/multi-compose/python/Dockerfile`
-  - Node source and Dockerfile: `SET6/multi-compose/node/hello.js`, `SET6/multi-compose/node/Dockerfile`
-  - Command (run from `SET6/multi-compose`): `docker compose up --build`; stop with `docker compose down`.
-- **6B — Parameterized Python through Jenkins**
-  - Python source: `jenkins-workspaces/Parameterized-Python/hello.py`
-  - Jenkins instructions: `jenkins-workspaces/Parameterized-Python/JENKINS-COMMAND.txt`
-  - Jenkins String Parameter name: `NAME`; Windows batch argument: `%NAME%`.
-
-### SET 7
-- **7A — Java reverse-number program on GitHub, cloned and executed through Jenkins**
-  - Main Java source: `SET7/github-java-reverse/ReverseNumber.java`
-  - Jenkins-ready copy: `jenkins-workspaces/GitHub-ReverseNumber/ReverseNumber.java`
-  - Jenkins instructions and build commands: `jenkins-workspaces/GitHub-ReverseNumber/JENKINS-COMMAND.txt`
-  - Repository URL for Jenkins Git SCM: `https://github.com/kovid-reddy/Jenkins-Repo.git`
-- **7B — Nginx with user-defined HTML using Docker Compose**
-  - HTML: `SET7/nginx-compose/index.html`
-  - Compose file: `SET7/nginx-compose/compose.yaml`
-  - Run from `SET7/nginx-compose`: `docker compose up -d`; open http://localhost:8080; stop with `docker compose down`.
-
-### SET 8
-- **8A — Node.js file-creation program on GitHub, cloned and executed through Jenkins**
-  - Main Node source: `SET8/github-node-create-file/createfile.js`
-  - Jenkins-ready copy: `jenkins-workspaces/GitHub-Node-CreateFile/createfile.js`
-  - Jenkins instructions and build command: `jenkins-workspaces/GitHub-Node-CreateFile/JENKINS-COMMAND.txt`
-  - Repository URL for Jenkins Git SCM: `https://github.com/kovid-reddy/Jenkins-Repo.git`
-- **8B — Selenium: open Google and search content**
-  - Python source: `SET8/selenium/google_search.py`
-
-### SET 9
-- **9A — Jenkins Pipeline with at least two stages**
-  - Pipeline script: `jenkins-workspaces/Pipeline/Pipeline.groovy`
-  - Jenkins instructions: `jenkins-workspaces/Pipeline/JENKINS-COMMAND.txt`
-  - Alternate copy: `SET9/jenkins-pipeline/Pipeline.groovy`
-- **9B — Java program using Docker Compose**
-  - Java source: `SET9/java-compose/Hello.java`
-  - Dockerfile: `SET9/java-compose/Dockerfile`
-  - Compose file: `SET9/java-compose/compose.yaml`
-  - Commands (run from `SET9/java-compose`): `docker compose up --build`; stop with `docker compose down`.
-
-### SET 10
-- **10A — Hello World Docker**
-  - Dockerfile: `SET10/hello-docker/Dockerfile`
-  - Commands (run from `SET10/hello-docker`): `docker build -t hello-docker .` then `docker run --rm hello-docker`.
-- **10B — Hello World Docker Compose**
-  - Compose file: `SET10/hello-compose/compose.yaml`
-  - Commands (run from `SET10/hello-compose`): `docker compose up`; stop with `docker compose down`.
-- **10C — Selenium: open Google**
-  - Python source: `SET10/selenium/google.py`
-
-## Jenkins workspace files at a glance
-
-These folders are prepared specifically for copying into the matching Jenkins job workspace:
-
-| Jenkins practical | Copy this folder's source file(s) |
-|---|---|
-| Java Hello World | `jenkins-workspaces/Hello-Java/` |
-| Parameterized Java | `jenkins-workspaces/Parameterized-Java/` |
-| Python Hello World | `jenkins-workspaces/Python-Hello/` |
-| Parameterized Python | `jenkins-workspaces/Parameterized-Python/` |
-| GitHub Java reverse | `jenkins-workspaces/GitHub-ReverseNumber/` |
-| GitHub Node file creation | `jenkins-workspaces/GitHub-Node-CreateFile/` |
-| Jenkins Pipeline | `jenkins-workspaces/Pipeline/Pipeline.groovy` (paste into a Pipeline job's script box) |
-
-For **Set 7A and Set 8A**, configure Jenkins **Source Code Management → Git** with this repository URL:
-`https://github.com/kovid-reddy/Jenkins-Repo.git`. The Jenkins-ready build commands use paths relative to the cloned repository in the job workspace.
-
-## Setup notes
+## 2. One-time setup
 
 ### Selenium
-Install once on the lab PC if needed:
+
+Install Selenium once:
 
 ```powershell
 py -m pip install -r requirements.txt
 ```
 
-Chrome must be installed. Selenium 4 uses Selenium Manager to manage the browser driver automatically in normal supported setups.
+Chrome must be installed. Selenium 4 normally uses Selenium Manager to manage the compatible ChromeDriver automatically.
 
-### Docker
-- Dockerfile project: run `docker build -t IMAGE_NAME .` and then `docker run --rm IMAGE_NAME` from the folder containing the Dockerfile.
-- Compose project: run `docker compose up --build` from the folder containing `compose.yaml`; use `docker compose down` to stop and remove the containers.
-- Nginx examples use host port 8080 and container port 80.
+### Check required tools
 
-### Jenkins on Windows
-Jenkins jobs, configuration and workspaces are local to each Jenkins installation. This repository contains the code and scripts, not Jenkins credentials or job history.
+```powershell
+java -version
+javac -version
+py --version
+node --version
+docker --version
+docker compose version
+```
 
-For a Freestyle project, copy the relevant source file(s) from `jenkins-workspaces/<folder>/` into that job's workspace and follow its `JENKINS-COMMAND.txt`.
+For Jenkins, open the Jenkins URL provided by your lab, commonly `http://localhost:8080`.
 
-If Jenkins reports that Python is not recognized, run `where.exe python` in PowerShell and use the full path to `python.exe` in the Jenkins batch command. Jenkins may run as a Windows service with a different PATH.
+---
 
-For parameterized jobs, enable **This project is parameterized**, add a String Parameter named `NAME`, and use `%NAME%` in a Windows batch command. Java reads the argument as `args[0]`; Python reads it as `sys.argv[1]`.
+# 3. Set-wise questions, file locations and exact commands
 
-For Pipeline practicals, create a **Pipeline** job and paste the contents of `jenkins-workspaces/Pipeline/Pipeline.groovy` into the Pipeline script box. Do not run the Groovy file as a Windows batch command.
+## SET 1
+
+### 1A) Execute and Test Simple Hello World Java program through Jenkins.
+
+**File:** `jenkins-workspaces/Hello-Java/HelloWorld.java`
+
+**On Jenkins:**
+1. Create a **Freestyle project** named `Hello-Java`.
+2. Copy `HelloWorld.java` into that job's workspace.
+3. Add **Build Steps → Execute Windows batch command**.
+
+**Build command:**
+
+```bat
+javac HelloWorld.java
+java HelloWorld
+```
+
+Expected output: `Hello World from Jenkins!`
+
+**Command-line test outside Jenkins (optional):**
+
+```powershell
+cd jenkins-workspaces\Hello-Java
+javac HelloWorld.java
+java HelloWorld
+cd ..\..
+```
+
+### 1B) Write a Selenium code using Python to open a Chrome browser, visit Wikipedia and take a screenshot.
+
+**File:** `SET1/selenium/wiki_screenshot.py`
+
+**Run from repository root:**
+
+```powershell
+py .\SET1\selenium\wiki_screenshot.py
+```
+
+Expected: Chrome opens Wikipedia, saves `wikipedia.png` in the current directory (the repository root), and closes.
+
+---
+
+## SET 2
+
+### 2A) Write a Selenium code using Python to open a Chrome browser, visit Google website and search for content.
+
+**File:** `SET2/selenium/google_search.py`
+
+**Run:**
+
+```powershell
+py .\SET2\selenium\google_search.py
+```
+
+Expected: Chrome opens Google, searches for Docker, and stays open until you press Enter in the terminal.
+
+### 2B) Execute and Test a Parameterized Java Program through Jenkins.
+
+**File:** `jenkins-workspaces/Parameterized-Java/ParameterizedHello.java`
+
+**On Jenkins:**
+1. Create a **Freestyle project** named `Parameterized-Java`.
+2. Copy `ParameterizedHello.java` into that job's workspace.
+3. Enable **This project is parameterized → Add Parameter → String Parameter**.
+4. Set **Name:** `NAME`; **Default Value:** `World`.
+5. Add **Build Steps → Execute Windows batch command**.
+
+**Build command:**
+
+```bat
+javac ParameterizedHello.java
+java ParameterizedHello %NAME%
+```
+
+Click **Build with Parameters**, enter `Kovid` for NAME, and build. Expected output: `Hello Kovid!`
+
+---
+
+## SET 3
+
+### 3A) Create and run Python program using Docker.
+
+**Files:**
+- `SET3/python-docker/hello.py`
+- `SET3/python-docker/Dockerfile`
+
+**Commands:**
+
+```powershell
+cd SET3\python-docker
+docker build -t python-hello .
+docker run --rm python-hello
+cd ..\..
+```
+
+Expected output: `Hello World from Python Docker!`
+
+### 3B) Write a Selenium code using Python to open a Chrome browser and visit Google website.
+
+**File:** `SET3/selenium/google.py`
+
+**Run from repository root:**
+
+```powershell
+py .\SET3\selenium\google.py
+```
+
+Expected: Chrome opens Google. Press Enter in the terminal to close it.
+
+---
+
+## SET 4
+
+### 4A) Create and run Nginx server using user-defined HTML file using Docker Compose.
+
+**Files:**
+- `SET4/nginx-compose/index.html`
+- `SET4/nginx-compose/compose.yaml`
+
+**Commands:**
+
+```powershell
+cd SET4\nginx-compose
+docker compose up -d
+```
+
+Open **http://localhost:8080** in Chrome to see the custom HTML page.
+
+Stop and remove the container:
+
+```powershell
+docker compose down
+cd ..\..
+```
+
+### 4B) Execute and Test Simple Hello World Python program through Jenkins.
+
+**File:** `jenkins-workspaces/Python-Hello/hello.py`
+
+**On Jenkins:**
+1. Create a **Freestyle project** named `Python-Hello`.
+2. Copy `hello.py` into the job's workspace.
+3. Add **Build Steps → Execute Windows batch command**.
+
+**Build command:**
+
+```bat
+python hello.py
+```
+
+If Jenkins reports that Python is not recognized, run `where.exe python` in PowerShell and use the full path to that PC's `python.exe`, for example:
+
+```bat
+"C:\\Users\\YOUR_USER\\AppData\\Local\\Programs\\Python\\Python311\\python.exe" hello.py
+```
+
+Expected output: `Hello World from Jenkins!`
+
+---
+
+## SET 5
+
+### 5A) Create a Jenkins Pipeline script with at least two stages.
+
+**File to paste into Jenkins:** `jenkins-workspaces/Pipeline/Pipeline.groovy`
+
+**On Jenkins:**
+1. Click **New Item**, enter `Two-Stage-Pipeline`, and select **Pipeline**.
+2. In the Pipeline section, select **Pipeline script**.
+3. Paste the contents of `jenkins-workspaces/Pipeline/Pipeline.groovy`.
+4. Click **Save → Build Now**.
+
+The two stages are **Build** and **Test**. Do not run this Groovy file as a Windows batch command.
+
+### 5B) Write a Selenium code using Python to open a Chrome browser, visit Wikipedia and take a screenshot.
+
+**File:** `SET5/selenium/wiki_screenshot.py`
+
+**Run:**
+
+```powershell
+py .\SET5\selenium\wiki_screenshot.py
+```
+
+Expected: `wikipedia.png` is saved in the current directory.
+
+---
+
+## SET 6
+
+### 6A) Execute three programs: Java program-JDK-17, Python program and Node.js programs using Docker Compose.
+
+**Files:** `SET6/multi-compose/`
+- Java: `java/Hello.java`, `java/Dockerfile` (uses JDK 17)
+- Python: `python/hello.py`, `python/Dockerfile`
+- Node.js: `node/hello.js`, `node/Dockerfile`
+- Compose: `compose.yaml`
+
+**Commands:**
+
+```powershell
+cd SET6\multi-compose
+docker compose up --build
+```
+
+Expected output includes:
+- `Hello from Java 17!`
+- `Hello from Python!`
+- `Hello from Node.js!`
+
+Stop and remove containers:
+
+```powershell
+docker compose down
+cd ..\..
+```
+
+### 6B) Execute and Test a Parameterized Python Program through Jenkins.
+
+**File:** `jenkins-workspaces/Parameterized-Python/hello.py`
+
+**On Jenkins:**
+1. Create a **Freestyle project** named `Parameterized-Python`.
+2. Copy `hello.py` into its workspace.
+3. Enable **This project is parameterized → String Parameter**.
+4. Set **Name:** `NAME`; **Default Value:** `World`.
+5. Add **Build Steps → Execute Windows batch command**.
+
+**Build command:**
+
+```bat
+python hello.py %NAME%
+```
+
+If the Jenkins service cannot find Python, use the full path to `python.exe` before `hello.py`, e.g. `"C:\\Path\\To\\python.exe" hello.py %NAME%`.
+
+Click **Build with Parameters**, enter `Kovid`, and build. Expected output: `Hello Kovid`.
+
+---
+
+## SET 7
+
+### 7A) Create a Java file in GitHub that reverses a number, clone it and execute it through Jenkins.
+
+**Java file in this GitHub repository:** `SET7/github-java-reverse/ReverseNumber.java`
+
+**On Jenkins:**
+1. Create a **Freestyle project** named `GitHub-ReverseNumber`.
+2. Under **Source Code Management → Git**, enter:
+   `https://github.com/kovid-reddy/Jenkins-Repo.git`
+3. Add **Build Steps → Execute Windows batch command**.
+
+**Build command (run after Jenkins checks out the repository):**
+
+```bat
+javac SET7\github-java-reverse\ReverseNumber.java
+java -cp SET7\github-java-reverse ReverseNumber
+```
+
+Expected output: `Reversed number: 54321`.
+
+A ready-to-copy standalone version is also at `jenkins-workspaces/GitHub-ReverseNumber/ReverseNumber.java`.
+
+### 7B) Create and run Nginx server using user-defined HTML file using Docker Compose.
+
+**Files:**
+- `SET7/nginx-compose/index.html`
+- `SET7/nginx-compose/compose.yaml`
+
+**Commands:**
+
+```powershell
+cd SET7\nginx-compose
+docker compose up -d
+```
+
+Open **http://localhost:8080**. Stop the service:
+
+```powershell
+docker compose down
+cd ..\..
+```
+
+---
+
+## SET 8
+
+### 8A) Create a Node.js file in GitHub that creates a new file, clone it and execute it through Jenkins.
+
+**Node.js file in this GitHub repository:** `SET8/github-node-create-file/createfile.js`
+
+**On Jenkins:**
+1. Create a **Freestyle project** named `GitHub-Node-CreateFile`.
+2. Under **Source Code Management → Git**, enter:
+   `https://github.com/kovid-reddy/Jenkins-Repo.git`
+3. Add **Build Steps → Execute Windows batch command**.
+
+**Build command (run after Jenkins checks out the repository):**
+
+```bat
+node SET8\github-node-create-file\createfile.js
+```
+
+Expected output: `File created successfully.` The program creates `newfile.txt` in the Jenkins job workspace.
+
+A ready-to-copy standalone version is also at `jenkins-workspaces/GitHub-Node-CreateFile/createfile.js`.
+
+### 8B) Write a Selenium code using Python to open a Chrome browser, visit Google website and search for content.
+
+**File:** `SET8/selenium/google_search.py`
+
+**Run:**
+
+```powershell
+py .\SET8\selenium\google_search.py
+```
+
+Expected: Chrome opens Google and searches for Jenkins.
+
+---
+
+## SET 9
+
+### 9A) Create a Jenkins Pipeline script with at least two stages.
+
+**File to paste into Jenkins:** `jenkins-workspaces/Pipeline/Pipeline.groovy`
+
+**On Jenkins:** create a **Pipeline** job, paste the Groovy file contents into **Pipeline script**, click **Save → Build Now**. The script contains **Build** and **Test** stages.
+
+### 9B) Create and run Java program using Docker Compose.
+
+**Files:**
+- `SET9/java-compose/Hello.java`
+- `SET9/java-compose/Dockerfile`
+- `SET9/java-compose/compose.yaml`
+
+**Commands:**
+
+```powershell
+cd SET9\java-compose
+docker compose up --build
+```
+
+Expected output: `Hello World from Java Docker Compose!`
+
+Stop and remove the container:
+
+```powershell
+docker compose down
+cd ..\..
+```
+
+---
+
+## SET 10
+
+### 10A) Create and run Hello World Docker.
+
+**File:** `SET10/hello-docker/Dockerfile`
+
+**Commands:**
+
+```powershell
+cd SET10\hello-docker
+docker build -t hello-docker .
+docker run --rm hello-docker
+cd ..\..
+```
+
+Expected output: `Hello World from Docker!`
+
+### 10B) Create and run Hello World Docker Compose.
+
+**File:** `SET10/hello-compose/compose.yaml`
+
+**Commands:**
+
+```powershell
+cd SET10\hello-compose
+docker compose up
+```
+
+Expected output: `Hello World from Docker Compose!` Stop with Ctrl+C, then run:
+
+```powershell
+docker compose down
+cd ..\..
+```
+
+### 10C) Write a Selenium code using Python to open a Chrome browser and visit Google website.
+
+**File:** `SET10/selenium/google.py`
+
+**Run:**
+
+```powershell
+py .\SET10\selenium\google.py
+```
+
+Expected: Chrome opens Google. Press Enter in the terminal to close it.
+
+---
+
+# 4. Jenkins workspace file quick reference
+
+These folders contain the files to copy into the matching Jenkins job workspace:
+
+| Practical | Copy from this folder |
+|---|---|
+| Set 1A — Java Hello World | `jenkins-workspaces/Hello-Java/` |
+| Set 2B — Parameterized Java | `jenkins-workspaces/Parameterized-Java/` |
+| Set 4B — Python Hello World | `jenkins-workspaces/Python-Hello/` |
+| Set 6B — Parameterized Python | `jenkins-workspaces/Parameterized-Python/` |
+| Set 7A — Java reverse number | `jenkins-workspaces/GitHub-ReverseNumber/` |
+| Set 8A — Node file creation | `jenkins-workspaces/GitHub-Node-CreateFile/` |
+| Set 5A / 9A — Pipeline | `jenkins-workspaces/Pipeline/Pipeline.groovy` (paste into a Pipeline job) |
+
+Each Jenkins workspace folder includes a `JENKINS-COMMAND.txt` with the matching build command and configuration notes.
+
+## 5. Important Windows/Jenkins notes
+
+- In Windows batch build steps, use `%NAME%` to read a Jenkins String Parameter named `NAME`.
+- Java receives command-line parameters in `args[0]`; Python receives them in `sys.argv[1]`.
+- Jenkins installed as a Windows service may run under a different account/PATH. If `python` works in your PowerShell but not Jenkins, run `where.exe python` in PowerShell and use that machine's full `python.exe` path in the Jenkins batch command.
+- Jenkins jobs, build history, credentials and workspace state belong to that Jenkins installation; GitHub carries the source files and scripts.
+- Docker commands must be run from the directory containing the relevant Dockerfile or Compose file, as shown above.
